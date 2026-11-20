@@ -4,387 +4,418 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crypto AI Analyst 5.0</title>
-
+<title>Crypto AI Futures Scanner</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;padding:15px;background:#0b1020;color:#edf2ff;
+ margin:0;padding:14px;background:#0b1220;color:#e5e7eb;
  font-family:Tahoma,Arial,sans-serif
 }
-header{padding:12px 0 20px}
-h1{color:#42d6a4;font-size:23px}
-h3{color:#a5b4fc;font-size:16px;margin-top:0}
-.sub,.small{color:#94a3b8;font-size:12px;line-height:2}
+.container{max-width:1200px;margin:auto}
+header{text-align:center;padding:18px 5px}
+h1{color:#38bdf8;font-size:23px}
+.sub,.muted{color:#94a3b8;font-size:12px;line-height:2}
 .card{
- background:#151e32;border:1px solid #293750;
- border-radius:15px;padding:16px;margin:14px 0
+ background:#172033;border:1px solid #29364b;
+ border-radius:13px;padding:15px;margin-bottom:14px
 }
-.row{
- display:flex;justify-content:space-between;gap:10px;
- padding:12px 0;border-bottom:1px solid #29344a;
- font-size:13px
+.grid{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));
+ gap:10px
 }
-.value{font-weight:bold;direction:ltr}
-.green{color:#42d6a4}
-.red{color:#fb7185}
+.stat{font-size:21px;font-weight:bold;margin-top:8px}
+.stat-label{font-size:12px;color:#94a3b8}
+.green{color:#22c55e}
+.red{color:#f87171}
+.blue{color:#38bdf8}
 .yellow{color:#fbbf24}
-button{
- width:100%;padding:14px;border:0;border-radius:10px;
- background:#42d6a4;color:#07111d;font-weight:bold;
- font-size:14px
+button,select{
+ background:#0284c7;color:white;border:0;border-radius:8px;
+ padding:10px 14px;font-size:13px
 }
-.stat{
- background:#0e1729;padding:13px;border-radius:10px;
- margin:8px 0
+button:disabled{opacity:.5}
+select{background:#26364d}
+.controls{display:flex;gap:8px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:11px 7px;text-align:center;border-bottom:1px solid #29364b}
+th{color:#94a3b8}
+td:first-child{text-align:right;font-weight:bold}
+.table-wrap{overflow-x:auto}
+.pill{
+ display:inline-block;padding:5px 8px;border-radius:7px;
+ background:#26364d;white-space:nowrap
 }
-.stat strong{font-size:20px;display:block;margin-top:9px}
-footer{text-align:center;color:#64748b;font-size:12px;padding:25px}
+.coin{font-weight:bold}
+.progress{
+ height:7px;background:#334155;border-radius:8px;overflow:hidden;margin-top:9px
+}
+.bar{height:100%;background:#38bdf8;width:0}
+footer{text-align:center;color:#64748b;font-size:11px;padding:20px}
+@media(max-width:600px){
+ body{padding:9px}
+ h1{font-size:19px}
+ th,td{padding:9px 5px;font-size:11px}
+}
 </style>
 </head>
 
 <body>
+<div class="container">
 
 <header>
-<h1>◈ Crypto AI Analyst 5.0</h1>
-<div class="sub">سامانه پایش و تحلیل وضعیت کلی بازار ارز دیجیتال</div>
+ <h1>Crypto AI Futures Scanner</h1>
+ <div class="sub">پایش آماری قراردادهای دائمی بازار رمزارز</div>
 </header>
 
 <div class="card">
-<h3>وضعیت اتصال اطلاعات</h3>
-
-<div class="row">
-<span>منبع داده</span>
-<strong>CoinPaprika</strong>
+ <div id="status" class="yellow">در حال اتصال به منبع داده...</div>
+ <p class="muted" id="updated">آخرین بررسی: --</p>
+ <div class="controls">
+  <button id="refresh" onclick="startScan()">اسکن مجدد</button>
+  <select id="count" onchange="startScan()">
+   <option value="8">۸ ارز برتر از نظر حجم</option>
+   <option value="12" selected>۱۲ ارز برتر از نظر حجم</option>
+   <option value="20">۲۰ ارز برتر از نظر حجم</option>
+  </select>
+ </div>
 </div>
 
-<div class="row">
-<span>وضعیت اتصال</span>
-<strong id="status" class="yellow">در حال اتصال</strong>
-</div>
-
-<div class="row">
-<span>تعداد ارزهای دریافت‌شده</span>
-<strong id="count">---</strong>
-</div>
-
-<div class="row">
-<span>آخرین به‌روزرسانی</span>
-<strong id="updated">---</strong>
-</div>
-</div>
-
-<div class="card">
-<h3>نمای کلی بازار</h3>
-
-<div class="stat">
-<span class="small">مجموع ارزش بازار ارزهای دریافت‌شده</span>
-<strong id="marketCap">---</strong>
-</div>
-
-<div class="stat">
-<span class="small">مجموع حجم معاملات ۲۴ ساعته</span>
-<strong id="volume">---</strong>
-</div>
-
-<div class="stat">
-<span class="small">میانگین تغییر قیمت یک‌ساعته</span>
-<strong id="avg1h">---</strong>
-</div>
-
-<div class="stat">
-<span class="small">میانگین تغییر قیمت ۲۴ ساعته</span>
-<strong id="avg24">---</strong>
-</div>
+<div class="grid">
+ <div class="card">
+  <div class="stat-label">قراردادهای بررسی‌شده</div>
+  <div class="stat blue" id="total">--</div>
+ </div>
+ <div class="card">
+  <div class="stat-label">روند صعودی هم‌جهت</div>
+  <div class="stat green" id="up">--</div>
+ </div>
+ <div class="card">
+  <div class="stat-label">روند نزولی هم‌جهت</div>
+  <div class="stat red" id="down">--</div>
+ </div>
+ <div class="card">
+  <div class="stat-label">وضعیت خنثی یا ترکیبی</div>
+  <div class="stat yellow" id="neutral">--</div>
+ </div>
 </div>
 
 <div class="card">
-<h3>گستردگی حرکت بازار</h3>
-
-<div class="row">
-<span>ارزهای دارای تغییر مثبت یک‌ساعته</span>
-<strong id="up1" class="green">---</strong>
-</div>
-
-<div class="row">
-<span>ارزهای دارای تغییر منفی یک‌ساعته</span>
-<strong id="down1" class="red">---</strong>
-</div>
-
-<div class="row">
-<span>ارزهای بدون تغییر یک‌ساعته</span>
-<strong id="flat1">---</strong>
-</div>
-
-<div class="row">
-<span>ارزهای دارای تغییر مثبت ۲۴ ساعته</span>
-<strong id="up24" class="green">---</strong>
-</div>
-
-<div class="row">
-<span>ارزهای دارای تغییر منفی ۲۴ ساعته</span>
-<strong id="down24" class="red">---</strong>
-</div>
-</div>
-
-<div class="card">
-<h3>شاخص‌های وضعیت بازار</h3>
-
-<div class="row">
-<span>جهت غالب تغییرات یک‌ساعته</span>
-<strong id="direction1">---</strong>
-</div>
-
-<div class="row">
-<span>جهت غالب تغییرات ۲۴ ساعته</span>
-<strong id="direction24">---</strong>
-</div>
-
-<div class="row">
-<span>نسبت ارزهای مثبت به کل</span>
-<strong id="breadth">---</strong>
-</div>
-
-<div class="row">
-<span>کیفیت داده</span>
-<strong id="quality">---</strong>
-</div>
+ <h3>نتایج اسکن بازار</h3>
+ <p class="muted">
+  ارزها بر اساس حجم معاملات ۲۴ ساعته انتخاب می‌شوند.
+  وضعیت‌ها تحلیل آماری هستند، نه سیگنال معامله.
+ </p>
+ <div class="table-wrap">
+ <table>
+  <thead>
+   <tr>
+    <th>ارز</th>
+    <th>قیمت</th>
+    <th>تغییر ۲۴h</th>
+    <th>۵ دقیقه</th>
+    <th>۱۵ دقیقه</th>
+    <th>۱ ساعت</th>
+    <th>RSI ۵m</th>
+    <th>حجم</th>
+    <th>وضعیت</th>
+   </tr>
+  </thead>
+  <tbody id="results">
+   <tr><td colspan="9">در انتظار دریافت اطلاعات...</td></tr>
+  </tbody>
+ </table>
+ </div>
 </div>
 
 <div class="card">
-<h3>گزارش تحلیلی بازار</h3>
-<p id="report" class="small">
-در انتظار دریافت اطلاعات بازار...
-</p>
+ <h3>راهنمای تحلیل</h3>
+ <p class="muted">
+  EMA20 و EMA50 جهت روند کوتاه‌مدت را نشان می‌دهند.
+  RSI مومنتوم را بررسی می‌کند و MACD برای ارزیابی تغییر مومنتوم به‌کار می‌رود.
+  حجم نیز با میانگین حجم ۲۰ کندل مقایسه می‌شود.
+ </p>
+ <p class="green">سبز: شرایط روند صعودی</p>
+ <p class="red">قرمز: شرایط روند نزولی</p>
+ <p class="yellow">زرد: شرایط ترکیبی یا خنثی</p>
 </div>
 
 <div class="card">
-<button id="refresh">به‌روزرسانی اطلاعات</button>
-<p class="small">
-به‌روزرسانی خودکار هر ۵ دقیقه انجام می‌شود.
-در صورت خطای سرویس، آخرین اطلاعات موفق حفظ می‌شوند.
-</p>
-</div>
-
-<div class="card">
-<h3>منبع اطلاعات</h3>
-<p class="small">
-CoinPaprika API
-<br>
-پوشش نسخه رایگان: حداکثر ۲۰۰۰ ارز فعال
-<br>
-اطلاعات ممکن است با تأخیر منتشر شوند.
-</p>
+ <h3>جزئیات آخرین اسکن</h3>
+ <div id="details" class="muted">هنوز اطلاعاتی ثبت نشده است.</div>
 </div>
 
 <footer>
-Crypto AI Analyst | Version 5.0
-<br>Market Overview & Educational Analytics
+ Crypto AI Futures Scanner | Public Market Data
 </footer>
+</div>
 
 <script>
-
-const API="https://api.coinpaprika.com/v1/tickers?quotes=USD";
-
-let loading=false;
-let timer=null;
+const API="https://api.bybit.com";
+let busy=false;
+let scanNumber=0;
 
 const $=id=>document.getElementById(id);
 
-function number(n){
- return Number(n).toLocaleString("en-US",{
- maximumFractionDigits:2
- });
+async function api(path){
+ const response=await fetch(API+path,{cache:"no-store"});
+ if(!response.ok) throw new Error("HTTP "+response.status);
+ const data=await response.json();
+ if(data.retCode!==0) throw new Error(data.retMsg||"API error");
+ return data.result;
+}
+
+function ema(values,period){
+ if(values.length<period)return null;
+ const k=2/(period+1);
+ let value=values.slice(0,period).reduce((a,b)=>a+b,0)/period;
+ for(let i=period;i<values.length;i++)
+  value=values[i]*k+value*(1-k);
+ return value;
+}
+
+function rsi(values,period=14){
+ if(values.length<period+1)return null;
+ let gains=0,losses=0;
+ const start=values.length-period;
+ for(let i=start;i<values.length;i++){
+  const d=values[i]-values[i-1];
+  if(d>0)gains+=d;
+  else losses-=d;
+ }
+ const avgGain=gains/period;
+ const avgLoss=losses/period;
+ if(avgLoss===0)return 100;
+ return 100-(100/(1+avgGain/avgLoss));
+}
+
+function macd(values){
+ if(values.length<35)return null;
+ const fast=ema(values.slice(-35),12);
+ const slow=ema(values.slice(-35),26);
+ const previous=ema(values.slice(-36,-1),12)-
+                ema(values.slice(-36,-1),26);
+ return {value:fast-slow,previous};
+}
+
+function analyze(candles){
+ const close=candles.map(x=>x.close);
+ const volumes=candles.map(x=>x.volume);
+ if(close.length<55)return null;
+
+ const e20=ema(close,20);
+ const e50=ema(close,50);
+ const current=close[close.length-1];
+ const r=rsi(close);
+ const m=macd(close);
+
+ const avgVol=volumes.slice(-21,-1)
+  .reduce((a,b)=>a+b,0)/20;
+ const lastVol=volumes[volumes.length-1];
+
+ let score=0;
+ if(current>e20)score++;
+ if(e20>e50)score++;
+ if(r!==null && r>50)score++;
+ if(m && m.value>0)score++;
+
+ let trend="خنثی";
+ if(score>=3)trend="صعودی";
+ if(score<=1)trend="نزولی";
+
+ return {
+  trend,score,rsi:r,price:current,
+  volumeRatio:avgVol>0?lastVol/avgVol:0,
+  ema20:e20,ema50:e50,
+  macd:m?m.value:null
+ };
+}
+
+function fmt(n){
+ if(!Number.isFinite(n))return "--";
+ return n.toLocaleString("en-US",{maximumFractionDigits:6});
 }
 
 function money(n){
- if(!Number.isFinite(n))return "---";
- if(n>=1e12)return "$"+(n/1e12).toFixed(2)+" T";
- if(n>=1e9)return "$"+(n/1e9).toFixed(2)+" B";
- if(n>=1e6)return "$"+(n/1e6).toFixed(2)+" M";
- return "$"+number(n);
+ if(n>=1e9)return "$"+(n/1e9).toFixed(2)+"B";
+ if(n>=1e6)return "$"+(n/1e6).toFixed(2)+"M";
+ if(n>=1e3)return "$"+(n/1e3).toFixed(2)+"K";
+ return "$"+fmt(n);
 }
 
-function average(arr){
- const valid=arr.filter(Number.isFinite);
- if(!valid.length)return null;
- return valid.reduce((a,b)=>a+b,0)/valid.length;
+function trendHtml(t){
+ const cls=t==="صعودی"?"green":t==="نزولی"?"red":"yellow";
+ return `<span class="pill ${cls}">${t}</span>`;
 }
 
-function direction(up,down){
- if(up>down)return ["غلبه تغییر مثبت","green"];
- if(down>up)return ["غلبه تغییر منفی","red"];
- return ["بازار متعادل","yellow"];
-}
-
-function setDirection(id,up,down){
- const result=direction(up,down);
- $(id).textContent=result[0];
- $(id).className=result[1];
-}
-
-function makeReport(data){
-
- const a=data.up1;
- const b=data.down1;
- const total=data.count;
-
- const positive=a/total*100;
- const negative=b/total*100;
-
- let text="تغییرات بازار نسبتاً متعادل است.";
-
- if(positive>=65){
-  text="بخش بزرگی از ارزهای بررسی‌شده تغییر مثبت داشته‌اند. گستردگی حرکت بازار به سمت مثبت متمایل است.";
- }else if(negative>=65){
-  text="بخش بزرگی از ارزهای بررسی‌شده تغییر منفی داشته‌اند. گستردگی حرکت بازار به سمت منفی متمایل است.";
- }else{
-  text="بازار رفتار یکپارچه‌ای ندارد و تغییرات مثبت و منفی بین ارزها توزیع شده است.";
+async function mapLimit(items,limit,fn){
+ const output=new Array(items.length);
+ let index=0;
+ async function worker(){
+  while(true){
+   const i=index++;
+   if(i>=items.length)return;
+   try{output[i]=await fn(items[i]);}
+   catch(e){output[i]={error:e.message};}
+  }
  }
-
- let extra="";
-
- if(data.avg1!==null){
-  extra=" میانگین تغییر یک‌ساعته "+data.avg1.toFixed(2)+" درصد است.";
- }
-
- let extra24="";
- if(data.avg24!==null){
-  extra24=" میانگین تغییر ۲۴ ساعته "+data.avg24.toFixed(2)+" درصد است.";
- }
-
- $("report").textContent=text+extra+extra24+
- " این گزارش صرفاً توصیف آماری بازار است و پیش‌بینی قیمت یا توصیه معاملاتی نیست.";
+ await Promise.all(
+  Array.from({length:limit},()=>worker())
+ );
+ return output;
 }
 
-async function loadMarket(){
+async function getCandles(symbol,interval){
+ const result=await api(
+  `/v5/market/kline?category=linear&symbol=${symbol}&interval=${interval}&limit=100`
+ );
+ return (result.list||[])
+  .map(x=>({
+   time:Number(x[0]),
+   close:Number(x[4]),
+   volume:Number(x[5])
+  }))
+  .filter(x=>Number.isFinite(x.close)&&Number.isFinite(x.volume))
+  .sort((a,b)=>a.time-b.time);
+}
 
- if(loading)return;
- loading=true;
+async function scanCoin(ticker){
+ const symbol=ticker.symbol;
+ const [c5,c15,c60]=await Promise.all([
+  getCandles(symbol,"5"),
+  getCandles(symbol,"15"),
+  getCandles(symbol,"60")
+ ]);
 
- $("status").textContent="در حال دریافت...";
- $("status").className="yellow";
+ const a5=analyze(c5);
+ const a15=analyze(c15);
+ const a60=analyze(c60);
+
+ if(!a5||!a15||!a60)
+  throw new Error("داده کافی نیست");
+
+ const all=[a5,a15,a60];
+ const up=all.every(x=>x.trend==="صعودی");
+ const down=all.every(x=>x.trend==="نزولی");
+
+ let overall="ترکیبی";
+ if(up)overall="صعودی هم‌جهت";
+ else if(down)overall="نزولی هم‌جهت";
+
+ return {
+  symbol,
+  price:Number(ticker.lastPrice),
+  change:Number(ticker.price24hPcnt)*100,
+  turnover:Number(ticker.turnover24h),
+  a5,a15,a60,overall
+ };
+}
+
+function render(items){
+ const rows=items.map(x=>{
+  const cls=x.change>=0?"green":"red";
+  const vol=x.a5.volumeRatio;
+  return `
+  <tr>
+   <td class="coin">${x.symbol}</td>
+   <td>${fmt(x.price)}</td>
+   <td class="${cls}">${x.change.toFixed(2)}%</td>
+   <td>${trendHtml(x.a5.trend)}</td>
+   <td>${trendHtml(x.a15.trend)}</td>
+   <td>${trendHtml(x.a60.trend)}</td>
+   <td>${x.a5.rsi.toFixed(1)}</td>
+   <td>${vol.toFixed(2)}x</td>
+   <td>${trendHtml(x.overall)}</td>
+  </tr>`;
+ }).join("");
+
+ $("results").innerHTML=rows|| 
+  `<tr><td colspan="9">نتیجه‌ای دریافت نشد.</td></tr>`;
+
+ const up=items.filter(x=>x.overall==="صعودی هم‌جهت").length;
+ const down=items.filter(x=>x.overall==="نزولی هم‌جهت").length;
+
+ $("total").textContent=items.length;
+ $("up").textContent=up;
+ $("down").textContent=down;
+ $("neutral").textContent=items.length-up-down;
+
+ $("details").innerHTML=items.map(x=>`
+ <div style="padding:9px 0;border-bottom:1px solid #334155">
+  <b>${x.symbol}</b> — ${x.overall}
+  <br>RSI پنج دقیقه: ${x.a5.rsi.toFixed(1)}
+  | نسبت حجم: ${x.a5.volumeRatio.toFixed(2)} برابر
+  <br>EMA20: ${fmt(x.a5.ema20)}
+  | EMA50: ${fmt(x.a5.ema50)}
+ </div>
+ `).join("");
+}
+
+async function startScan(){
+ if(busy)return;
+ busy=true;
+ const thisScan=++scanNumber;
+ $("refresh").disabled=true;
+ $("status").textContent="در حال دریافت فهرست قراردادها...";
 
  try{
+  const [instruments,tickers]=await Promise.all([
+   api("/v5/market/instruments-info?category=linear&limit=1000"),
+   api("/v5/market/tickers?category=linear")
+  ]);
 
-  const response=await fetch(API,{
-   cache:"no-store"
-  });
+  const active=new Set(
+   (instruments.list||[])
+    .filter(x=>
+      x.status==="Trading" &&
+      x.contractType==="LinearPerpetual" &&
+      x.symbol.endsWith("USDT")
+    )
+    .map(x=>x.symbol)
+  );
 
-  if(!response.ok){
-   throw new Error("HTTP "+response.status);
-  }
+  const count=Number($("count").value);
 
-  const coins=await response.json();
+  const selected=(tickers.list||[])
+   .filter(x=>active.has(x.symbol))
+   .sort((a,b)=>Number(b.turnover24h)-Number(a.turnover24h))
+   .slice(0,count);
 
-  if(!Array.isArray(coins)||!coins.length){
-   throw new Error("اطلاعات معتبر دریافت نشد");
-  }
+  if(!selected.length)
+   throw new Error("قرارداد فعالی دریافت نشد.");
 
-  let cap=0;
-  let volume=0;
+  $("status").textContent=
+   `در حال تحلیل ${selected.length} قرارداد در سه تایم‌فریم...`;
 
-  let up1=0,down1=0,flat1=0;
-  let up24=0,down24=0;
+  const results=await mapLimit(selected,3,scanCoin);
 
-  const changes1=[];
-  const changes24=[];
+  if(thisScan!==scanNumber)return;
 
-  let valid=0;
+  const valid=results.filter(x=>x&&!x.error)
+   .sort((a,b)=>b.turnover-a.turnover);
 
-  coins.forEach(coin=>{
+  render(valid);
 
-   const q=coin.quotes?.USD;
-   if(!q)return;
-
-   const c1=Number(q.percent_change_1h);
-   const c24=Number(q.percent_change_24h);
-
-   const marketCap=Number(q.market_cap);
-   const vol=Number(q.volume_24h);
-
-   if(Number.isFinite(marketCap))cap+=marketCap;
-   if(Number.isFinite(vol))volume+=vol;
-
-   if(Number.isFinite(c1)){
-    valid++;
-    changes1.push(c1);
-
-    if(c1>0)up1++;
-    else if(c1<0)down1++;
-    else flat1++;
-   }
-
-   if(Number.isFinite(c24)){
-    changes24.push(c24);
-    if(c24>0)up24++;
-    else if(c24<0)down24++;
-   }
-
-  });
-
-  const avg1=average(changes1);
-  const avg24=average(changes24);
-
-  const data={
-   count:coins.length,
-   up1,down1,flat1,up24,down24,
-   avg1,avg24
-  };
-
-  $("count").textContent=number(coins.length);
-  $("marketCap").textContent=money(cap);
-  $("volume").textContent=money(volume);
-
-  $("avg1h").textContent=avg1===null?"---":avg1.toFixed(2)+"%";
-  $("avg24").textContent=avg24===null?"---":avg24.toFixed(2)+"%";
-
-  $("up1").textContent=number(up1);
-  $("down1").textContent=number(down1);
-  $("flat1").textContent=number(flat1);
-
-  $("up24").textContent=number(up24);
-  $("down24").textContent=number(down24);
-
-  setDirection("direction1",up1,down1);
-  setDirection("direction24",up24,down24);
-
-  $("breadth").textContent=
-   valid?((up1/valid)*100).toFixed(1)+"%":"---";
-
-  const quality=valid/coins.length*100;
-
-  $("quality").textContent=quality.toFixed(1)+"%";
-  $("quality").className=quality>=90?"green":"yellow";
-
-  $("status").textContent="دریافت موفق";
-  $("status").className="green";
+  const failed=results.length-valid.length;
+  $("status").textContent=
+   `اسکن تمام شد | موفق: ${valid.length} | ناموفق: ${failed}`;
 
   $("updated").textContent=
-   new Date().toLocaleTimeString("fa-IR");
-
-  makeReport(data);
+   "آخرین بررسی: "+new Date().toLocaleString("fa-IR");
 
  }catch(error){
-
-  $("status").textContent="خطا در دریافت";
-  $("status").className="red";
-
-  $("report").textContent=
-   "دریافت اطلاعات ناموفق بود: "+error.message+
-   ". اتصال اینترنت، دسترسی API یا محدودیت درخواست‌ها را بررسی کنید.";
-
+  $("status").textContent="خطا: "+error.message;
+  $("results").innerHTML=
+   `<tr><td colspan="9">${error.message}</td></tr>`;
  }finally{
-  loading=false;
+  busy=false;
+  $("refresh").disabled=false;
  }
 }
 
-$("refresh").addEventListener("click",loadMarket);
-
-loadMarket();
-
-timer=setInterval(loadMarket,300000);
-
+startScan();
+setInterval(()=>{
+ if(!busy)startScan();
+},5*60*1000);
 </script>
 </body>
 </html>
