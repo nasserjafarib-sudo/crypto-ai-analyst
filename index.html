@@ -5,237 +5,280 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Crypto AI Analyst</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0b1020;color:#eef2ff;font-family:Tahoma,Arial;padding:16px}
+
+body{
+ margin:0;
+ padding:16px;
+ background:#0b1020;
+ color:#eef2ff;
+ font-family:Tahoma,Arial,sans-serif;
+}
+
+header{padding:12px 0 20px}
 h1{color:#42d6a4;font-size:23px}
-.sub{color:#94a3b8;font-size:13px}
-.card{background:#151e32;border:1px solid #293750;border-radius:15px;padding:16px;margin:14px 0}
+.sub{color:#94a3b8;font-size:12px}
+
+.card{
+ background:#151e32;
+ border:1px solid #293750;
+ border-radius:15px;
+ padding:16px;
+ margin:14px 0;
+}
+
 h3{color:#a5b4fc;margin-top:0}
-select,button{width:100%;padding:13px;border-radius:9px;font-size:15px}
-select{background:#0b1020;color:white;border:1px solid #394966}
-button{background:#42d6a4;color:#07111d;border:0;font-weight:bold}
-.row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #29344a;font-size:13px}
-.green{color:#42d6a4}.red{color:#fb7185}.yellow{color:#fbbf24}
-.price{font-size:25px;font-weight:bold;direction:ltr;text-align:right}
-.small{font-size:12px;color:#94a3b8}
-footer{text-align:center;color:#64748b;font-size:12px;padding:20px}
+
+select,button{
+ width:100%;
+ padding:13px;
+ border-radius:9px;
+ font-size:14px;
+}
+
+select{
+ background:#0b1020;
+ color:white;
+ border:1px solid #394966;
+}
+
+button{
+ background:#42d6a4;
+ color:#07111d;
+ border:0;
+ font-weight:bold;
+}
+
+.row{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ padding:12px 0;
+ border-bottom:1px solid #29344a;
+ font-size:13px;
+}
+
+.green{color:#42d6a4}
+.yellow{color:#fbbf24}
+.red{color:#fb7185}
+
+.chart{
+ width:100%;
+ height:460px;
+ overflow:hidden;
+ border-radius:10px;
+}
+
+.chart iframe{
+ width:100%;
+ height:100%;
+ border:0;
+}
+
+.small{
+ font-size:11px;
+ color:#94a3b8;
+ line-height:2;
+}
+
+footer{
+ text-align:center;
+ color:#64748b;
+ font-size:12px;
+ padding:25px 0;
+}
 </style>
 </head>
+
 <body>
 
+<header>
 <h1>◈ Crypto AI Analyst</h1>
 <div class="sub">دستیار هوشمند تحلیل ارزهای دیجیتال</div>
+</header>
 
 <div class="card">
-<h3>انتخاب ارز</h3>
-<select id="symbol" onchange="loadMarket()">
-<option>BTCUSDT</option>
-<option>ETHUSDT</option>
-<option>XRPUSDT</option>
-<option>SOLUSDT</option>
-<option>BNBUSDT</option>
+<h3>انتخاب ارز دیجیتال</h3>
+<select id="symbol">
+<option value="BINANCE:BTCUSDT">Bitcoin - BTC</option>
+<option value="BINANCE:ETHUSDT">Ethereum - ETH</option>
+<option value="BINANCE:XRPUSDT">Ripple - XRP</option>
+<option value="BINANCE:SOLUSDT">Solana - SOL</option>
+<option value="BINANCE:BNBUSDT">BNB - BNB</option>
 </select>
 </div>
 
 <div class="card">
-<h3>قیمت لحظه‌ای Binance Futures</h3>
-<div class="price" id="price">---</div>
-<div class="small" id="updated">در انتظار دریافت اطلاعات</div>
+<h3>انتخاب تایم‌فریم</h3>
+<select id="interval">
+<option value="5">۵ دقیقه</option>
+<option value="15" selected>۱۵ دقیقه</option>
+<option value="30">۳۰ دقیقه</option>
+<option value="60">۱ ساعت</option>
+<option value="240">۴ ساعت</option>
+</select>
+</div>
+
+<div class="card">
+<h3>نمودار زنده TradingView</h3>
+<div class="chart" id="chart">
+<div style="padding:30px;text-align:center">
+در حال بارگذاری نمودار...
+</div>
+</div>
+<p class="small">
+منبع نمودار: TradingView
+<br>
+اطلاعات نمودار تابع دسترسی و شرایط ارائه‌دهنده داده است.
+</p>
+</div>
+
+<div class="card">
+<h3>وضعیت سیستم</h3>
+
 <div class="row">
-<span>وضعیت اتصال</span>
-<span id="connection" class="yellow">در حال اتصال</span>
+<span>سرویس نمودار</span>
+<span class="green">TradingView</span>
+</div>
+
+<div class="row">
+<span>ارز انتخابی</span>
+<strong id="selectedCoin">BTCUSDT</strong>
+</div>
+
+<div class="row">
+<span>تایم‌فریم</span>
+<strong id="selectedFrame">۱۵ دقیقه</strong>
+</div>
+
+<div class="row">
+<span>وضعیت موتور تحلیل</span>
+<span class="yellow">در حال توسعه</span>
 </div>
 </div>
 
 <div class="card">
-<h3>تحلیل چندتایم‌فریمی</h3>
-<div id="frames">
-در انتظار دریافت اطلاعات بازار...
+<h3>شاخص‌های تکنیکال</h3>
+
+<div class="row">
+<span>EMA 20</span>
+<span>در انتظار توسعه</span>
+</div>
+
+<div class="row">
+<span>EMA 50</span>
+<span>در انتظار توسعه</span>
+</div>
+
+<div class="row">
+<span>RSI 14</span>
+<span>در انتظار توسعه</span>
+</div>
+
+<div class="row">
+<span>MACD</span>
+<span>در انتظار توسعه</span>
+</div>
+
+<div class="row">
+<span>ATR 14</span>
+<span>در انتظار توسعه</span>
 </div>
 </div>
 
 <div class="card">
-<h3>شاخص‌های تکنیکال (۱۵ دقیقه)</h3>
-<div id="indicators">در انتظار داده</div>
+<h3>گزارش تحلیلی هوشمند</h3>
+<p id="report">
+پس از توسعه موتور تحلیل، گزارش روند بازار و شاخص‌های تکنیکال در این قسمت نمایش داده خواهد شد.
+</p>
 </div>
 
 <div class="card">
-<h3>گزارش تحلیلی</h3>
-<div id="report">هنوز تحلیلی انجام نشده است.</div>
+<button onclick="loadChart()">
+بارگذاری مجدد نمودار
+</button>
 </div>
 
-<div class="card">
-<button onclick="loadMarket()">به‌روزرسانی و تحلیل مجدد</button>
-<p class="small">به‌روزرسانی خودکار هر ۶۰ ثانیه</p>
-</div>
-
-<div class="card">
-  <h3>نمودار زنده TradingView</h3>
-  <div class="tradingview-widget-container" style="height:450px;width:100%">
-    <div class="tradingview-widget-container__widget"
-         style="height:100%;width:100%">
-    </div>
-    <script type="text/javascript"
-      src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
-      async>
-    {
-      "autosize": true,
-      "symbol": "BINANCE:BTCUSDT",
-      "interval": "15",
-      "timezone": "Etc/UTC",
-      "theme": "dark",
-      "style": "1",
-      "locale": "en",
-      "allow_symbol_change": true,
-      "hide_side_toolbar": false,
-      "withdateranges": true,
-      "save_image": false,
-      "calendar": false,
-      "support_host": "https://www.tradingview.com"
-    }
-    </script>
-  </div>
-</div>
-
-<footer>Crypto AI Analyst | نسخه آزمایشی 2.0</footer>
+<footer>
+Crypto AI Analyst | نسخه 3.0
+</footer>
 
 <script>
-const base="https://fapi.binance.com";
-const intervals=[
-["۵ دقیقه","5m"],
-["۱۵ دقیقه","15m"],
-["۳۰ دقیقه","30m"],
-["۱ ساعت","1h"],
-["۴ ساعت","4h"]
-];
+const symbolSelect=document.getElementById("symbol");
+const intervalSelect=document.getElementById("interval");
 
-function ema(values,period){
-let k=2/(period+1);
-let result=values[0];
-for(let i=1;i<values.length;i++)
-result=values[i]*k+result*(1-k);
-return result;
+function loadChart(){
+
+ const symbol=symbolSelect.value;
+ const interval=intervalSelect.value;
+
+ document.getElementById("selectedCoin").textContent=
+ symbol.split(":")[1];
+
+ const names={
+ "5":"۵ دقیقه",
+ "15":"۱۵ دقیقه",
+ "30":"۳۰ دقیقه",
+ "60":"۱ ساعت",
+ "240":"۴ ساعت"
+ };
+
+ document.getElementById("selectedFrame").textContent=
+ names[interval];
+
+ const container=document.getElementById("chart");
+
+ container.innerHTML="";
+
+ const widget=document.createElement("div");
+ widget.className="tradingview-widget-container";
+ widget.style.width="100%";
+ widget.style.height="100%";
+
+ const inner=document.createElement("div");
+ inner.className="tradingview-widget-container__widget";
+ inner.style.width="100%";
+ inner.style.height="100%";
+
+ widget.appendChild(inner);
+
+ const script=document.createElement("script");
+
+ script.type="text/javascript";
+ script.async=true;
+ script.src=
+ "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+
+ const config={
+ "autosize":true,
+ "symbol":symbol,
+ "interval":interval,
+ "timezone":"Etc/UTC",
+ "theme":"dark",
+ "style":"1",
+ "locale":"en",
+ "allow_symbol_change":true,
+ "hide_side_toolbar":false,
+ "withdateranges":true,
+ "save_image":false,
+ "calendar":false,
+ "support_host":"https://www.tradingview.com"
+ };
+
+ script.textContent=JSON.stringify(config);
+
+ widget.appendChild(script);
+ container.appendChild(widget);
+
 }
 
-function rsi(values,period=14){
-let gains=0,losses=0;
-for(let i=values.length-period;i<values.length;i++){
-let d=values[i]-values[i-1];
-if(d>0)gains+=d;
-else losses-=d;
-}
-let avgGain=gains/period;
-let avgLoss=losses/period;
-if(avgLoss===0)return 100;
-return 100-(100/(1+avgGain/avgLoss));
-}
+symbolSelect.addEventListener("change",loadChart);
+intervalSelect.addEventListener("change",loadChart);
 
-function atr(data,period=14){
-let trs=[];
-for(let i=1;i<data.length;i++){
-let high=data[i][2],low=data[i][3],prev=data[i-1][4];
-trs.push(Math.max(high-low,Math.abs(high-prev),Math.abs(low-prev)));
-}
-return trs.slice(-period).reduce((a,b)=>a+b,0)/period;
-}
-
-async function getData(symbol,interval){
-const url=base+"/fapi/v1/klines?symbol="+symbol+
-"&interval="+interval+"&limit=100";
-const res=await fetch(url);
-if(!res.ok)throw new Error("دریافت کندل ناموفق بود");
-return await res.json();
-}
-
-function analyze(data){
-const closes=data.map(x=>Number(x[4]));
-const volumes=data.map(x=>Number(x[5]));
-const last=closes[closes.length-1];
-const e20=ema(closes.slice(-60),20);
-const e50=ema(closes.slice(-80),50);
-const rv=rsi(closes);
-const fast=ema(closes.slice(-50),12);
-const slow=ema(closes.slice(-50),26);
-const macd=fast-slow;
-const previousVol=volumes.slice(-21,-1);
-const avgVol=previousVol.reduce((a,b)=>a+b,0)/previousVol.length;
-const volRatio=volumes[volumes.length-1]/avgVol;
-const av=atr(data);
-
-let trend="خنثی",cls="yellow";
-if(last>e20 && e20>e50){trend="صعودی";cls="green";}
-if(last<e20 && e20<e50){trend="نزولی";cls="red";}
-
-return {last,e20,e50,rv,macd,av,volRatio,trend,cls};
-}
-
-async function loadMarket(){
-const symbol=document.getElementById("symbol").value;
-const connection=document.getElementById("connection");
-connection.textContent="در حال دریافت...";
-connection.className="yellow";
-
-try{
-const ticker=await fetch(base+"/fapi/v1/ticker/price?symbol="+symbol);
-if(!ticker.ok)throw new Error("خطای دریافت قیمت");
-const tickerData=await ticker.json();
-
-document.getElementById("price").textContent=
-Number(tickerData.price).toLocaleString("en-US",{maximumFractionDigits:8});
-
-const results=await Promise.all(
-intervals.map(async ([name,interval])=>{
-const data=await getData(symbol,interval);
-return {name,interval,data,analysis:analyze(data)};
-})
-);
-
-connection.textContent="متصل";
-connection.className="green";
-document.getElementById("updated").textContent=
-"آخرین به‌روزرسانی: "+new Date().toLocaleTimeString("fa-IR");
-
-let html="";
-results.forEach(item=>{
-html+=`<div class="row">
-<span>${item.name}</span>
-<strong class="${item.analysis.cls}">${item.analysis.trend}</strong>
-</div>`;
-});
-document.getElementById("frames").innerHTML=html;
-
-const a=results[1].analysis;
-document.getElementById("indicators").innerHTML=`
-<div class="row"><span>EMA 20</span><b>${a.e20.toFixed(5)}</b></div>
-<div class="row"><span>EMA 50</span><b>${a.e50.toFixed(5)}</b></div>
-<div class="row"><span>RSI 14</span><b>${a.rv.toFixed(2)}</b></div>
-<div class="row"><span>MACD</span><b>${a.macd.toFixed(6)}</b></div>
-<div class="row"><span>ATR 14</span><b>${a.av.toFixed(6)}</b></div>
-<div class="row"><span>نسبت حجم به میانگین ۲۰ کندل</span><b>${a.volRatio.toFixed(2)} برابر</b></div>`;
-
-let bullish=results.filter(x=>x.analysis.trend==="صعودی").length;
-let bearish=results.filter(x=>x.analysis.trend==="نزولی").length;
-let summary="بازار وضعیت ترکیبی یا خنثی دارد.";
-if(bullish>=4)summary="در بیشتر تایم‌فریم‌ها تمایل صعودی دیده می‌شود.";
-if(bearish>=4)summary="در بیشتر تایم‌فریم‌ها تمایل نزولی دیده می‌شود.";
-
-document.getElementById("report").innerHTML=`
-<p>${summary}</p>
-<div class="row"><span>تایم‌فریم صعودی</span><b class="green">${bullish} از ۵</b></div>
-<div class="row"><span>تایم‌فریم نزولی</span><b class="red">${bearish} از ۵</b></div>
-<p class="small">این نتیجه صرفاً ارزیابی تکنیکال آموزشی است و سیگنال قطعی معامله محسوب نمی‌شود.</p>`;
-
-}catch(error){
-connection.textContent="خطا در اتصال";
-connection.className="red";
-document.getElementById("report").textContent=
-"دریافت اطلاعات ناموفق بود. اتصال اینترنت و دسترسی به Binance را بررسی کن. "+error.message;
-}
-}
-
-loadMarket();
-setInterval(loadMarket,60000);
+loadChart();
 </script>
+
 </body>
 </html>
