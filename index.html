@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crypto AI Analyst</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;background:#0b1020;color:#eef2ff;
+font-family:Tahoma,Arial,sans-serif;padding:18px
+}
+header{padding:18px 0}
+h1{color:#42d6a4;font-size:25px}
+.sub{color:#94a3b8;font-size:13px}
+.card{
+background:#151e32;border:1px solid #26344d;
+border-radius:14px;padding:16px;margin:14px 0
+}
+h3{margin-top:0;color:#a5b4fc}
+.price{font-size:23px;font-weight:bold}
+.green{color:#42d6a4}
+.red{color:#fb7185}
+button{
+background:#42d6a4;color:#07111d;border:0;
+padding:13px;border-radius:9px;font-weight:bold;
+width:100%;font-size:15px
+}
+select{
+width:100%;padding:12px;border-radius:9px;
+background:#0b1020;color:white;border:1px solid #394966
+}
+.row{display:flex;justify-content:space-between;
+padding:12px 0;border-bottom:1px solid #29344a}
+footer{text-align:center;color:#64748b;font-size:12px;padding:20px}
+</style>
+</head>
+<body>
+<header>
+<h1>◈ Crypto AI Analyst</h1>
+<div class="sub">دستیار هوشمند تحلیل ارزهای دیجیتال</div>
+</header>
+
+<div class="card">
+<h3>بازار مورد بررسی</h3>
+<select id="symbol">
+<option>BTCUSDT</option>
+<option>ETHUSDT</option>
+<option>XRPUSDT</option>
+<option>SOLUSDT</option>
+<option>BNBUSDT</option>
+</select>
+</div>
+
+<div class="card">
+<h3>وضعیت بازار</h3>
+<div class="row">
+<span>وضعیت اتصال</span>
+<span class="red">در انتظار اتصال</span>
+</div>
+<div class="row">
+<span>منبع داده</span>
+<span>Binance Futures</span>
+</div>
+<div class="row">
+<span>نوع تحلیل</span>
+<span>چندتایم‌فریمی</span>
+</div>
+</div>
+
+<div class="card">
+<h3>تایم‌فریم‌های تحلیل</h3>
+<div class="row"><span>۵ دقیقه</span><span>در انتظار داده</span></div>
+<div class="row"><span>۱۵ دقیقه</span><span>در انتظار داده</span></div>
+<div class="row"><span>۳۰ دقیقه</span><span>در انتظار داده</span></div>
+<div class="row"><span>۱ ساعت</span><span>در انتظار داده</span></div>
+<div class="row"><span>۴ ساعت</span><span>در انتظار داده</span></div>
+</div>
+
+<div class="card">
+<h3>گزارش هوش مصنوعی</h3>
+<p id="report">هنوز اطلاعات بازار دریافت نشده است.</p>
+<button onclick="alert('در نسخه بعدی اتصال زنده Binance فعال می‌شود.')">
+شروع تحلیل
+</button>
+</div>
+
+<footer>
+Crypto AI Analyst | نسخه آزمایشی 1.0
+</footer>
+</body>
+</html>
