@@ -4,99 +4,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crypto AI Analyst 4.0</title>
+<title>Crypto AI Analyst 5.0</title>
 
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;padding:16px;background:#0b1020;
- color:#eef2ff;font-family:Tahoma,Arial,sans-serif
+ margin:0;padding:15px;background:#0b1020;color:#edf2ff;
+ font-family:Tahoma,Arial,sans-serif
 }
 header{padding:12px 0 20px}
 h1{color:#42d6a4;font-size:23px}
+h3{color:#a5b4fc;font-size:16px;margin-top:0}
 .sub,.small{color:#94a3b8;font-size:12px;line-height:2}
 .card{
  background:#151e32;border:1px solid #293750;
  border-radius:15px;padding:16px;margin:14px 0
 }
-h3{color:#a5b4fc;margin-top:0;font-size:17px}
-select,button{
- width:100%;padding:13px;border-radius:9px;font-size:14px
-}
-select{
- background:#0b1020;color:white;border:1px solid #394966
-}
-button{
- background:#42d6a4;color:#07111d;border:0;font-weight:bold
-}
 .row{
- display:flex;justify-content:space-between;gap:8px;
+ display:flex;justify-content:space-between;gap:10px;
  padding:12px 0;border-bottom:1px solid #29344a;
  font-size:13px
 }
+.value{font-weight:bold;direction:ltr}
 .green{color:#42d6a4}
 .red{color:#fb7185}
 .yellow{color:#fbbf24}
-.value{font-weight:bold;direction:ltr}
-.chart{height:420px;width:100%;overflow:hidden}
-#chart{width:100%;height:100%}
-.metric{
- background:#0e1729;border-radius:10px;
- padding:12px;margin:8px 0
+button{
+ width:100%;padding:14px;border:0;border-radius:10px;
+ background:#42d6a4;color:#07111d;font-weight:bold;
+ font-size:14px
 }
-footer{text-align:center;color:#64748b;font-size:12px;padding:24px}
+.stat{
+ background:#0e1729;padding:13px;border-radius:10px;
+ margin:8px 0
+}
+.stat strong{font-size:20px;display:block;margin-top:9px}
+footer{text-align:center;color:#64748b;font-size:12px;padding:25px}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>◈ Crypto AI Analyst</h1>
-<div class="sub">دستیار تحلیل و بررسی بازار ارزهای دیجیتال</div>
+<h1>◈ Crypto AI Analyst 5.0</h1>
+<div class="sub">سامانه پایش و تحلیل وضعیت کلی بازار ارز دیجیتال</div>
 </header>
 
 <div class="card">
-<h3>انتخاب ارز</h3>
-<select id="coin">
-<option value="BTC-USD">Bitcoin - BTC</option>
-<option value="ETH-USD">Ethereum - ETH</option>
-<option value="XRP-USD">Ripple - XRP</option>
-<option value="SOL-USD">Solana - SOL</option>
-<option value="ADA-USD">Cardano - ADA</option>
-</select>
+<h3>وضعیت اتصال اطلاعات</h3>
+
+<div class="row">
+<span>منبع داده</span>
+<strong>CoinPaprika</strong>
 </div>
 
-<div class="card">
-<h3>تایم‌فریم نمودار</h3>
-<select id="timeframe">
-<option value="5">۵ دقیقه</option>
-<option value="15" selected>۱۵ دقیقه</option>
-<option value="30">۳۰ دقیقه</option>
-<option value="60">۱ ساعت</option>
-<option value="240">۴ ساعت</option>
-</select>
+<div class="row">
+<span>وضعیت اتصال</span>
+<strong id="status" class="yellow">در حال اتصال</strong>
 </div>
 
-<div class="card">
-<h3>نمودار TradingView</h3>
-<div class="chart" id="chart"></div>
-<p class="small">منبع نمودار: TradingView</p>
+<div class="row">
+<span>تعداد ارزهای دریافت‌شده</span>
+<strong id="count">---</strong>
 </div>
 
-<div class="card">
-<h3>وضعیت اتصال داده‌ها</h3>
-<div class="row">
-<span>منبع داده تکنیکال</span>
-<span>Coinbase</span>
-</div>
-<div class="row">
-<span>وضعیت دریافت</span>
-<strong id="status" class="yellow">در انتظار</strong>
-</div>
-<div class="row">
-<span>ارز انتخابی</span>
-<strong id="coinName">BTC-USD</strong>
-</div>
 <div class="row">
 <span>آخرین به‌روزرسانی</span>
 <strong id="updated">---</strong>
@@ -104,364 +75,315 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:24px}
 </div>
 
 <div class="card">
-<h3>مقایسه پنج تایم‌فریم</h3>
-<div id="multi">
-در انتظار دریافت داده...
+<h3>نمای کلی بازار</h3>
+
+<div class="stat">
+<span class="small">مجموع ارزش بازار ارزهای دریافت‌شده</span>
+<strong id="marketCap">---</strong>
+</div>
+
+<div class="stat">
+<span class="small">مجموع حجم معاملات ۲۴ ساعته</span>
+<strong id="volume">---</strong>
+</div>
+
+<div class="stat">
+<span class="small">میانگین تغییر قیمت یک‌ساعته</span>
+<strong id="avg1h">---</strong>
+</div>
+
+<div class="stat">
+<span class="small">میانگین تغییر قیمت ۲۴ ساعته</span>
+<strong id="avg24">---</strong>
 </div>
 </div>
 
 <div class="card">
-<h3>شاخص‌های تکنیکال</h3>
-<div id="indicators">
-در انتظار دریافت داده...
+<h3>گستردگی حرکت بازار</h3>
+
+<div class="row">
+<span>ارزهای دارای تغییر مثبت یک‌ساعته</span>
+<strong id="up1" class="green">---</strong>
+</div>
+
+<div class="row">
+<span>ارزهای دارای تغییر منفی یک‌ساعته</span>
+<strong id="down1" class="red">---</strong>
+</div>
+
+<div class="row">
+<span>ارزهای بدون تغییر یک‌ساعته</span>
+<strong id="flat1">---</strong>
+</div>
+
+<div class="row">
+<span>ارزهای دارای تغییر مثبت ۲۴ ساعته</span>
+<strong id="up24" class="green">---</strong>
+</div>
+
+<div class="row">
+<span>ارزهای دارای تغییر منفی ۲۴ ساعته</span>
+<strong id="down24" class="red">---</strong>
+</div>
+</div>
+
+<div class="card">
+<h3>شاخص‌های وضعیت بازار</h3>
+
+<div class="row">
+<span>جهت غالب تغییرات یک‌ساعته</span>
+<strong id="direction1">---</strong>
+</div>
+
+<div class="row">
+<span>جهت غالب تغییرات ۲۴ ساعته</span>
+<strong id="direction24">---</strong>
+</div>
+
+<div class="row">
+<span>نسبت ارزهای مثبت به کل</span>
+<strong id="breadth">---</strong>
+</div>
+
+<div class="row">
+<span>کیفیت داده</span>
+<strong id="quality">---</strong>
 </div>
 </div>
 
 <div class="card">
 <h3>گزارش تحلیلی بازار</h3>
-<div id="report">
-پس از دریافت داده‌ها، گزارش محاسباتی نمایش داده می‌شود.
-</div>
+<p id="report" class="small">
+در انتظار دریافت اطلاعات بازار...
+</p>
 </div>
 
 <div class="card">
-<button id="refresh">به‌روزرسانی و محاسبه مجدد</button>
-<p class="small">اطلاعات به‌صورت دستی یا با تغییر انتخاب‌ها به‌روزرسانی می‌شوند.</p>
+<button id="refresh">به‌روزرسانی اطلاعات</button>
+<p class="small">
+به‌روزرسانی خودکار هر ۵ دقیقه انجام می‌شود.
+در صورت خطای سرویس، آخرین اطلاعات موفق حفظ می‌شوند.
+</p>
+</div>
+
+<div class="card">
+<h3>منبع اطلاعات</h3>
+<p class="small">
+CoinPaprika API
+<br>
+پوشش نسخه رایگان: حداکثر ۲۰۰۰ ارز فعال
+<br>
+اطلاعات ممکن است با تأخیر منتشر شوند.
+</p>
 </div>
 
 <footer>
-Crypto AI Analyst | Version 4.0
-<br>ابزار آموزشی تحلیل تکنیکال
+Crypto AI Analyst | Version 5.0
+<br>Market Overview & Educational Analytics
 </footer>
 
 <script>
-const API="https://api.exchange.coinbase.com/products/";
 
-const frames=[
- {name:"۵ دقیقه",value:5,source:300,group:300},
- {name:"۱۵ دقیقه",value:15,source:900,group:900},
- {name:"۳۰ دقیقه",value:30,source:900,group:1800},
- {name:"۱ ساعت",value:60,source:3600,group:3600},
- {name:"۴ ساعت",value:240,source:3600,group:14400}
-];
+const API="https://api.coinpaprika.com/v1/tickers?quotes=USD";
+
+let loading=false;
+let timer=null;
 
 const $=id=>document.getElementById(id);
 
-function formatNumber(n){
+function number(n){
  return Number(n).toLocaleString("en-US",{
- maximumFractionDigits:6
+ maximumFractionDigits:2
  });
 }
 
-function emaSeries(values,period){
- const k=2/(period+1);
- let result=[];
- let current=values[0];
- result.push(current);
- for(let i=1;i<values.length;i++){
-  current=values[i]*k+current*(1-k);
-  result.push(current);
- }
- return result;
+function money(n){
+ if(!Number.isFinite(n))return "---";
+ if(n>=1e12)return "$"+(n/1e12).toFixed(2)+" T";
+ if(n>=1e9)return "$"+(n/1e9).toFixed(2)+" B";
+ if(n>=1e6)return "$"+(n/1e6).toFixed(2)+" M";
+ return "$"+number(n);
 }
 
-function calculateRSI(values,period=14){
- if(values.length<=period)return null;
- let gain=0,loss=0;
- for(let i=1;i<=period;i++){
-  const d=values[i]-values[i-1];
-  if(d>0)gain+=d;
-  else loss-=d;
- }
- let avgGain=gain/period;
- let avgLoss=loss/period;
-
- for(let i=period+1;i<values.length;i++){
-  const d=values[i]-values[i-1];
-  avgGain=(avgGain*(period-1)+Math.max(d,0))/period;
-  avgLoss=(avgLoss*(period-1)+Math.max(-d,0))/period;
- }
- if(avgLoss===0)return 100;
- return 100-(100/(1+avgGain/avgLoss));
+function average(arr){
+ const valid=arr.filter(Number.isFinite);
+ if(!valid.length)return null;
+ return valid.reduce((a,b)=>a+b,0)/valid.length;
 }
 
-function calculateATR(data,period=14){
- const trs=[];
- for(let i=1;i<data.length;i++){
-  const c=data[i],p=data[i-1];
-  trs.push(Math.max(
-   c.high-c.low,
-   Math.abs(c.high-p.close),
-   Math.abs(c.low-p.close)
-  ));
- }
- if(trs.length<period)return null;
- let avg=trs.slice(0,period).reduce((a,b)=>a+b,0)/period;
- for(let i=period;i<trs.length;i++){
-  avg=(avg*(period-1)+trs[i])/period;
- }
- return avg;
+function direction(up,down){
+ if(up>down)return ["غلبه تغییر مثبت","green"];
+ if(down>up)return ["غلبه تغییر منفی","red"];
+ return ["بازار متعادل","yellow"];
 }
 
-function calculateMACD(values){
- const fast=emaSeries(values,12);
- const slow=emaSeries(values,26);
- const line=values.map((_,i)=>fast[i]-slow[i]);
- const signal=emaSeries(line.slice(25),9);
- const macd=line[line.length-1];
- const sig=signal[signal.length-1];
- return {macd,signal:sig,histogram:macd-sig};
+function setDirection(id,up,down){
+ const result=direction(up,down);
+ $(id).textContent=result[0];
+ $(id).className=result[1];
 }
 
-function aggregateCandles(data,seconds){
- if(seconds===300||seconds===900||seconds===3600)return data;
+function makeReport(data){
 
- const groups={};
+ const a=data.up1;
+ const b=data.down1;
+ const total=data.count;
 
- data.forEach(c=>{
-  const bucket=Math.floor(c.time/seconds)*seconds;
-  if(!groups[bucket]){
-   groups[bucket]={
-    time:bucket,open:c.open,high:c.high,
-    low:c.low,close:c.close,volume:c.volume,
-    count:0
-   };
-  }
-  const g=groups[bucket];
-  g.high=Math.max(g.high,c.high);
-  g.low=Math.min(g.low,c.low);
-  g.close=c.close;
-  g.volume+=c.volume;
-  g.count++;
- });
+ const positive=a/total*100;
+ const negative=b/total*100;
 
- const expected=seconds/900;
- return Object.values(groups)
-  .filter(g=>seconds===1800?g.count===2:true)
-  .sort((a,b)=>a.time-b.time)
-  .map(({count,...c})=>c);
-}
+ let text="تغییرات بازار نسبتاً متعادل است.";
 
-async function getCandles(product,frame){
- const url=API+product+"/candles?granularity="+frame.source;
- const response=await fetch(url);
- if(!response.ok)throw new Error("خطای سرور داده: "+response.status);
-
- const raw=await response.json();
-
- if(!Array.isArray(raw)||raw.length<60)
-  throw new Error("تعداد کندل‌های دریافتی کافی نیست.");
-
- const candles=raw.map(x=>({
-  time:Number(x[0]),
-  low:Number(x[1]),
-  high:Number(x[2]),
-  open:Number(x[3]),
-  close:Number(x[4]),
-  volume:Number(x[5])
- })).sort((a,b)=>a.time-b.time);
-
- return aggregateCandles(candles,frame.group);
-}
-
-function analyze(data){
- const closes=data.map(c=>c.close);
- const volumes=data.map(c=>c.volume);
-
- const e20=emaSeries(closes,20).at(-1);
- const e50=emaSeries(closes,50).at(-1);
- const rsi=calculateRSI(closes);
- const atr=calculateATR(data);
- const macd=calculateMACD(closes);
-
- const avgVol=volumes.slice(-21,-1)
-  .reduce((a,b)=>a+b,0)/20;
-
- const volRatio=avgVol?volumes.at(-1)/avgVol:null;
- const last=closes.at(-1);
-
- let trend="خنثی";
- let cls="yellow";
-
- if(last>e20&&e20>e50){
-  trend="تمایل صعودی";
-  cls="green";
- }else if(last<e20&&e20<e50){
-  trend="تمایل نزولی";
-  cls="red";
+ if(positive>=65){
+  text="بخش بزرگی از ارزهای بررسی‌شده تغییر مثبت داشته‌اند. گستردگی حرکت بازار به سمت مثبت متمایل است.";
+ }else if(negative>=65){
+  text="بخش بزرگی از ارزهای بررسی‌شده تغییر منفی داشته‌اند. گستردگی حرکت بازار به سمت منفی متمایل است.";
+ }else{
+  text="بازار رفتار یکپارچه‌ای ندارد و تغییرات مثبت و منفی بین ارزها توزیع شده است.";
  }
 
- return {last,e20,e50,rsi,atr,macd,volRatio,trend,cls};
+ let extra="";
+
+ if(data.avg1!==null){
+  extra=" میانگین تغییر یک‌ساعته "+data.avg1.toFixed(2)+" درصد است.";
+ }
+
+ let extra24="";
+ if(data.avg24!==null){
+  extra24=" میانگین تغییر ۲۴ ساعته "+data.avg24.toFixed(2)+" درصد است.";
+ }
+
+ $("report").textContent=text+extra+extra24+
+ " این گزارش صرفاً توصیف آماری بازار است و پیش‌بینی قیمت یا توصیه معاملاتی نیست.";
 }
 
-function showIndicators(a){
- $("indicators").innerHTML=`
- <div class="metric">
-  <div class="row"><span>EMA 20</span><b>${formatNumber(a.e20)}</b></div>
-  <div class="row"><span>EMA 50</span><b>${formatNumber(a.e50)}</b></div>
-  <div class="row"><span>RSI 14</span><b>${a.rsi.toFixed(2)}</b></div>
-  <div class="row"><span>MACD</span><b>${a.macd.macd.toFixed(6)}</b></div>
-  <div class="row"><span>Signal</span><b>${a.macd.signal.toFixed(6)}</b></div>
-  <div class="row"><span>Histogram</span><b>${a.macd.histogram.toFixed(6)}</b></div>
-  <div class="row"><span>ATR 14</span><b>${formatNumber(a.atr)}</b></div>
-  <div class="row"><span>نسبت حجم به میانگین</span><b>${a.volRatio.toFixed(2)} برابر</b></div>
- </div>`;
-}
+async function loadMarket(){
 
-function showMulti(results){
- let html="";
- results.forEach(x=>{
-  html+=`
-  <div class="row">
-   <span>${x.name}</span>
-   <strong class="${x.analysis.cls}">
-    ${x.analysis.trend}
-   </strong>
-  </div>`;
- });
- $("multi").innerHTML=html;
-}
-
-function showReport(results,a){
- const up=results.filter(x=>x.analysis.trend==="تمایل صعودی").length;
- const down=results.filter(x=>x.analysis.trend==="تمایل نزولی").length;
-
- let text="ساختار تایم‌فریم‌ها ترکیبی است و جهت غالب مشخصی دیده نمی‌شود.";
-
- if(up>=4)text="در بیشتر تایم‌فریم‌های بررسی‌شده، ساختار قیمت تمایل صعودی دارد.";
- if(down>=4)text="در بیشتر تایم‌فریم‌های بررسی‌شده، ساختار قیمت تمایل نزولی دارد.";
-
- let rsiText="RSI در محدوده میانی است.";
- if(a.rsi>=70)rsiText="RSI در محدوده بالاتر از ۷۰ قرار دارد.";
- if(a.rsi<=30)rsiText="RSI در محدوده پایین‌تر از ۳۰ قرار دارد.";
-
- let macdText=a.macd.histogram>0?
- "هیستوگرام MACD مثبت است.":
- "هیستوگرام MACD منفی یا صفر است.";
-
- $("report").innerHTML=`
- <p>${text}</p>
- <p>${rsiText}</p>
- <p>${macdText}</p>
- <div class="row"><span>تایم‌فریم‌های با تمایل صعودی</span><b class="green">${up} از ۵</b></div>
- <div class="row"><span>تایم‌فریم‌های با تمایل نزولی</span><b class="red">${down} از ۵</b></div>
- <p class="small">
- این گزارش بر پایه محاسبات تکنیکال است؛
- اندیکاتورها به‌تنهایی پیش‌بینی قطعی یا توصیه معاملاتی نیستند.
- </p>`;
-}
-
-function loadChart(){
- const product=$("coin").value;
- const interval=$("timeframe").value;
- const base=product.replace("-","");
-
- const symbols={
- "BTC-USD":"COINBASE:BTCUSD",
- "ETH-USD":"COINBASE:ETHUSD",
- "XRP-USD":"COINBASE:XRPUSD",
- "SOL-USD":"COINBASE:SOLUSD",
- "ADA-USD":"COINBASE:ADAUSD"
- };
-
- const container=$("chart");
- container.innerHTML="";
-
- const widget=document.createElement("div");
- widget.className="tradingview-widget-container";
- widget.style.height="100%";
- widget.style.width="100%";
-
- const inner=document.createElement("div");
- inner.className="tradingview-widget-container__widget";
- inner.style.height="100%";
- inner.style.width="100%";
- widget.appendChild(inner);
-
- const script=document.createElement("script");
- script.async=true;
- script.src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-
- script.textContent=JSON.stringify({
-  autosize:true,
-  symbol:symbols[product],
-  interval:interval,
-  timezone:"Etc/UTC",
-  theme:"dark",
-  style:"1",
-  locale:"en",
-  allow_symbol_change:true,
-  hide_side_toolbar:false,
-  withdateranges:true,
-  save_image:false,
-  calendar:false,
-  support_host:"https://www.tradingview.com"
- });
-
- widget.appendChild(script);
- container.appendChild(widget);
-}
-
-let busy=false;
-
-async function loadAnalysis(){
- if(busy)return;
- busy=true;
+ if(loading)return;
+ loading=true;
 
  $("status").textContent="در حال دریافت...";
  $("status").className="yellow";
 
- const product=$("coin").value;
- $("coinName").textContent=product;
- $("indicators").textContent="در حال محاسبه...";
- $("multi").textContent="در حال بررسی...";
- $("report").textContent="در حال آماده‌سازی گزارش...";
-
  try{
-  const results=await Promise.all(frames.map(async frame=>{
-   const data=await getCandles(product,frame);
-   const analysis=analyze(data);
-   return {...frame,analysis};
-  }));
 
-  const selected=Number($("timeframe").value);
-  const current=results.find(x=>x.value===selected);
+  const response=await fetch(API,{
+   cache:"no-store"
+  });
 
-  showMulti(results);
-  showIndicators(current.analysis);
-  showReport(results,current.analysis);
+  if(!response.ok){
+   throw new Error("HTTP "+response.status);
+  }
+
+  const coins=await response.json();
+
+  if(!Array.isArray(coins)||!coins.length){
+   throw new Error("اطلاعات معتبر دریافت نشد");
+  }
+
+  let cap=0;
+  let volume=0;
+
+  let up1=0,down1=0,flat1=0;
+  let up24=0,down24=0;
+
+  const changes1=[];
+  const changes24=[];
+
+  let valid=0;
+
+  coins.forEach(coin=>{
+
+   const q=coin.quotes?.USD;
+   if(!q)return;
+
+   const c1=Number(q.percent_change_1h);
+   const c24=Number(q.percent_change_24h);
+
+   const marketCap=Number(q.market_cap);
+   const vol=Number(q.volume_24h);
+
+   if(Number.isFinite(marketCap))cap+=marketCap;
+   if(Number.isFinite(vol))volume+=vol;
+
+   if(Number.isFinite(c1)){
+    valid++;
+    changes1.push(c1);
+
+    if(c1>0)up1++;
+    else if(c1<0)down1++;
+    else flat1++;
+   }
+
+   if(Number.isFinite(c24)){
+    changes24.push(c24);
+    if(c24>0)up24++;
+    else if(c24<0)down24++;
+   }
+
+  });
+
+  const avg1=average(changes1);
+  const avg24=average(changes24);
+
+  const data={
+   count:coins.length,
+   up1,down1,flat1,up24,down24,
+   avg1,avg24
+  };
+
+  $("count").textContent=number(coins.length);
+  $("marketCap").textContent=money(cap);
+  $("volume").textContent=money(volume);
+
+  $("avg1h").textContent=avg1===null?"---":avg1.toFixed(2)+"%";
+  $("avg24").textContent=avg24===null?"---":avg24.toFixed(2)+"%";
+
+  $("up1").textContent=number(up1);
+  $("down1").textContent=number(down1);
+  $("flat1").textContent=number(flat1);
+
+  $("up24").textContent=number(up24);
+  $("down24").textContent=number(down24);
+
+  setDirection("direction1",up1,down1);
+  setDirection("direction24",up24,down24);
+
+  $("breadth").textContent=
+   valid?((up1/valid)*100).toFixed(1)+"%":"---";
+
+  const quality=valid/coins.length*100;
+
+  $("quality").textContent=quality.toFixed(1)+"%";
+  $("quality").className=quality>=90?"green":"yellow";
 
   $("status").textContent="دریافت موفق";
   $("status").className="green";
-  $("updated").textContent=new Date().toLocaleTimeString("fa-IR");
+
+  $("updated").textContent=
+   new Date().toLocaleTimeString("fa-IR");
+
+  makeReport(data);
 
  }catch(error){
+
   $("status").textContent="خطا در دریافت";
   $("status").className="red";
+
   $("report").textContent=
-   "دریافت داده‌ها ناموفق بود: "+error.message+
-   " . ممکن است شبکه یا دسترسی سرویس محدود باشد.";
-  $("multi").textContent="اطلاعات دریافت نشد.";
-  $("indicators").textContent="اطلاعات دریافت نشد.";
+   "دریافت اطلاعات ناموفق بود: "+error.message+
+   ". اتصال اینترنت، دسترسی API یا محدودیت درخواست‌ها را بررسی کنید.";
+
  }finally{
-  busy=false;
+  loading=false;
  }
 }
 
-$("coin").addEventListener("change",()=>{
- loadChart();
- loadAnalysis();
-});
+$("refresh").addEventListener("click",loadMarket);
 
-$("timeframe").addEventListener("change",()=>{
- loadChart();
- loadAnalysis();
-});
+loadMarket();
 
-$("refresh").addEventListener("click",loadAnalysis);
-
-loadChart();
-loadAnalysis();
+timer=setInterval(loadMarket,300000);
 
 </script>
 </body>
